@@ -1,0 +1,7 @@
+FROM node:bookworm
+WORKDIR /app
+COPY . .
+RUN npm install
+CMD ["npm", "run", "dev"]
+ENV NEXT_TELEMETRY_DISABLED=1
+CMD ["npm", "run", "dev"]
