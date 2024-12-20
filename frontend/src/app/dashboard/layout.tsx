@@ -1,26 +1,15 @@
-'use client';
+'use client'; // Add this at the top to make the component a Client Component
 
-import { useSession } from 'next-auth/react'; // Use session hook for client-side session handling
 import { useState } from 'react';
 import { FaHome, FaUser, FaCog, FaUpload } from 'react-icons/fa'; // Import icons
 import SignOutButton from '../components/SignOutButton';
-import OutlookCalendar from '../components/OutlookCalendar'; // Home section content
-import Profile from './profile/page'; // Profile section content
-import SettingsPage from './settingspage/page'; // Settings section content
-import UploadPage from './upload/page'; // Upload section content
-import SignInPage from '../signin/page';
+import OutlookCalendar from '../components/OutlookCalendar';
+import Profile from './profile/page';
+import SettingsPage from './settingspage/page';
+import UploadPage from './upload/page';
 
 export default function DashboardLayoutClient() {
-  const { data: session, status } = useSession(); // Use useSession to manage session on the client
   const [activeSection, setActiveSection] = useState('home'); // Track active section
-
-  if (status === 'loading') {
-    return <div>Loading...</div>; // Loading state while session is being fetched
-  }
-
-  if (!session) {
-    return <SignInPage />;
-  }
 
   return (
     <div className="flex h-screen bg-gray-10-">
@@ -38,7 +27,7 @@ export default function DashboardLayoutClient() {
               activeSection === 'home' ? 'bg-white text-black shadow-lg px-6 py-3' : 'hover:bg-gray-600'
             }`}
           >
-            <FaHome /> {/* Home Icon */}
+            <FaHome />
             <span>Home</span>
           </button>
           <button
@@ -47,7 +36,7 @@ export default function DashboardLayoutClient() {
               activeSection === 'profile' ? 'bg-white text-black shadow-lg px-6 py-3' : 'hover:bg-gray-600'
             }`}
           >
-            <FaUser /> {/* Profile Icon */}
+            <FaUser />
             <span>Profile</span>
           </button>
           <button
@@ -56,7 +45,7 @@ export default function DashboardLayoutClient() {
               activeSection === 'settings' ? 'bg-white text-black shadow-lg px-6 py-3' : 'hover:bg-gray-600'
             }`}
           >
-            <FaCog /> {/* Settings Icon */}
+            <FaCog />
             <span>Settings</span>
           </button>
           <button
@@ -65,7 +54,7 @@ export default function DashboardLayoutClient() {
               activeSection === 'upload' ? 'bg-white text-black shadow-lg px-6 py-3' : 'hover:bg-gray-600'
             }`}
           >
-            <FaUpload /> {/* Upload Icon */}
+            <FaUpload />
             <span>Upload CSV</span>
           </button>
           <SignOutButton />
@@ -75,7 +64,7 @@ export default function DashboardLayoutClient() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col">
         <header className="flex justify-between items-center bg-white shadow-md p-4">
-          <h1 className="text-2xl font-bold text-gray-800 mt-3">Welcome, {session.user?.name} 🎉</h1>
+          <h1 className="text-2xl font-bold text-gray-800 mt-3">Welcome to the Dashboard 🎉</h1>
           <div className="flex items-center space-x-4">
             <button className="bg-gray-100 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-200 transition font-bold">Notifications</button>
             <SignOutButton />
