@@ -5,8 +5,8 @@
 import { useState } from 'react';
 
 export default function ProfilePage() {
-  const [userName, setUserName] = useState("Jake Loke");
-  const [userEmail, setUserEmail] = useState("jakeloke@example.com");
+  const [userName, setUserName] = useState("Joe Smchoe");
+  const [userEmail, setUserEmail] = useState("joesmchoe@example.com");
   const [profileImage, setProfileImage] = useState("/default-avatar.png");
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
