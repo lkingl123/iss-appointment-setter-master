@@ -1,10 +1,8 @@
-import NextAuth from "next-auth"
-import GoogleProvider from "next-auth/providers/google"
-import AzureADProvider from "next-auth/providers/azure-ad"
-import type { NextAuthOptions } from 'next-auth'
-import { createUser } from "@/app/api/users" // Import createUser function
+import NextAuth, { type NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import AzureADProvider from "next-auth/providers/azure-ad";
+import { createUser } from "@/app/api/users"; // Import createUser function
 
-// Extend the default session and JWT types globally to include accessToken
 declare module "next-auth" {
   interface Session {
     accessToken?: string;
@@ -29,68 +27,52 @@ export const authOptions: NextAuthOptions = {
       tenantId: 'common',
       authorization: {
         params: {
-          scope: "openid profile email offline_access User.Read Calendars.Read Calendars.ReadWrite"
-        }
-      }
+          scope: "openid profile email offline_access User.Read Calendars.Read Calendars.ReadWrite",
+        },
+      },
     }),
   ],
   session: {
-    strategy: 'jwt',
+    strategy: "jwt",
   },
   callbacks: {
     async jwt({ token, account }) {
-
-
-      // Check if account exists and add accessToken to the token
-      if (account && account.access_token) {
+      if (account?.access_token) {
         token.accessToken = account.access_token;
       }
-
       return token;
     },
     async session({ session, token }) {
-    
-      // Assign the accessToken from token to session
       session.accessToken = token.accessToken;
       return session;
     },
     async signIn({ user, account }) {
       try {
-        console.log("Sign-in callback - user:", user);
-        console.log("Sign-in callback - account:", account);
-
-        // Ensure account is not null before accessing its properties
         if (!account || !user.email) {
-          console.error('Account or user email is missing');
+          console.error("Account or user email is missing");
           return false;
         }
 
-        // Check which provider was used
-        const provider = account.provider === 'azure-ad' ? 'azure-ad' : 'google';
-        
-        // Create user payload
+        const provider = account.provider === "azure-ad" ? "azure-ad" : "google";
+
         const userData = {
-          email: user.email ?? '', // Fallback to an empty string if email is null/undefined
+          email: user.email ?? "",
           provider,
-          google_token: provider === 'google' ? account.access_token : null,
-          outlook_token: provider === 'azure-ad' ? account.access_token : null
+          google_token: provider === "google" ? account.access_token : null,
+          outlook_token: provider === "azure-ad" ? account.access_token : null,
         };
 
-        // Log the user data payload
-        console.log("User data payload:", userData);
-
-        // Call the createUser function
         const response = await createUser(userData);
-        console.log('User created or already exists:', response);
+        console.log("User created or already exists:", response);
 
-        return true;  // Continue the sign-in process
+        return true;
       } catch (error) {
-        console.error('Failed to create user:', error);
-        return false; // Stop the sign-in process if there was an error
+        console.error("Failed to create user:", error);
+        return false;
       }
-    }
+    },
   },
-}
+};
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST }
+const handler = NextAuth(authOptions);
+export { handler as GET, handler as POST };
